@@ -1,0 +1,13 @@
+type User {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  email: String @unique
+  resetPasswordToken: String
+  resetPasswordExpire: DateTime
+  password: String
+  facebookUserId: String @unique
+  firstName: String
+  lastName: String
+}

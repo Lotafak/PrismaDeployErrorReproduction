@@ -1,0 +1,5 @@
+datamodel: datamodel.graphql
+
+secret: ${env:GRAPHCOOL_SECRET}
+
+endpoint: ${env:GRAPHCOOL_ENDPOINT}

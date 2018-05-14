@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  # database-server bridge
+  prisma:
+    image: prismagraphql/prisma:1.8
+    restart: always
+    ports:
+    - 4466:4466
+    environment:
+      PRISMA_CONFIG: |
+        managementApiSecret: my-server-secret-123
+        port: 4466
+        databases:
+          default:
+            connector: mysql
+            active: true
+            host: db
+            port: 3306
+            user: root
+            password: prisma
+  # database
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: prisma
+    volumes:
+      - db:/var/lib/mysql
+
+  # central api
+  server:
+    image: node:8.11
+    build: .
+    ports:
+    - 4000:4000
+    environment:
+      PRISMA_ENDPOINT: prisma:4466
+      PRISMA_CLUSTER: local
+      # PRISMA_ENDPOINT: ./wait-for-it.sh prisma:4466 -- prisma deploy
+      PRISMA_SECRET: mysecret123
+      APP_SECRET: jwtsecret123
+      PORT: 4000
+volumes:
+  db:
